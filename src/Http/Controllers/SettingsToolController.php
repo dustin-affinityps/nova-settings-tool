@@ -2,6 +2,7 @@
 
 namespace Bakerkretzmar\NovaSettingsTool\Http\Controllers;
 
+use Bakerkretzmar\NovaSettingsTool\Events\SettingsChanged;
 use Illuminate\Http\Request;
 use Spatie\Valuestore\Valuestore;
 
@@ -20,6 +21,8 @@ class SettingsToolController
     {
         $values = $this->store->all();
 
+        $title = config('nova-settings-tool.title');
+
         $settings = collect(config('nova-settings-tool.settings'));
 
         $panels = $settings->where('panel', '!=', null)->pluck('panel')->unique()
@@ -33,22 +36,30 @@ class SettingsToolController
 
         $settings = $settings->map(function ($setting) use ($values) {
             return array_merge([
-                    'type' => 'text',
-                    'label' => ucfirst($setting['key']),
-                    'value' => $values[$setting['key']] ?? null,
-                ], $setting);
+                'type' => 'text',
+                'label' => ucfirst($setting['key']),
+                'value' => $values[$setting['key']] ?? null,
+            ], $setting);
         })
             ->keyBy('key')
             ->all();
 
-        return response()->json(compact('settings', 'panels'));
+        return response()->json([
+            'title' => config('nova-settings-tool.title'),
+            'settings' => $settings,
+            'panels' => $panels,
+        ]);
     }
 
     public function write(Request $request)
     {
+        $oldSettings = $this->store->all();
+
         foreach ($request->all() as $key => $value) {
             $this->store->put($key, $value);
         }
+
+        event(new SettingsChanged($this->store->all(), $oldSettings));
 
         return response()->json();
     }

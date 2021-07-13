@@ -4,8 +4,7 @@
     "authors": [
         {
             "name": "Jacob Baker-Kretzmar",
-            "email": "jacobtbk@gmail.com",
-            "role": "Developer"
+            "email": "jacobtbk@gmail.com"
         }
     ],
     "keywords": [
@@ -23,13 +22,13 @@
         }
     ],
     "require": {
-        "php": ">=7.1.0",
-        "laravel/nova": "*",
+        "php": "^7.1|^8.0",
+        "laravel/nova": "^1.0|^2.0|^3.0",
         "spatie/valuestore": "^1.2"
     },
     "require-dev": {
-        "orchestra/testbench": "^4.0",
-        "phpunit/phpunit": "^8.3"
+        "orchestra/testbench": "^6.4",
+        "phpunit/phpunit": "^9.4"
     },
     "autoload": {
         "psr-4": {
@@ -38,7 +37,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Bakerkretzmar\\NovaSettingsTool\\Tests\\": "tests/"
+            "Tests\\": "tests/"
         }
     },
     "extra": {

@@ -52,15 +52,23 @@ export default {
 
     data: () => ({
         saving: false,
+        title: '',
         settings: {},
         panels: {},
     }),
 
+    metaInfo() {
+        return {
+            title: this.title,
+        }
+    },
+
     mounted() {
         Nova.request().get('/nova-vendor/settings-tool')
-            .then(response => {
-                this.settings = response.data.settings
-                this.panels = response.data.panels
+            .then(({ data }) => {
+                this.title = data.title
+                this.settings = data.settings
+                this.panels = data.panels
             })
     },
 
